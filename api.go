@@ -1,3 +1,6 @@
+
+// Package hcsvlabapi provides an convienience implementation of the client side of the
+// HCS-Vlab API, which can be seen at http://wherever-the-api-is.com
 package hcsvlabapi
 
 import (
@@ -20,6 +23,10 @@ type ItemList struct {
   Items []string
 }
 
+type ApiVersion struct {
+ Api_version string `json:"API version"`
+}
+
 // A representation of a document within an item from the HCSvLab API
 type DocIdentifier struct {
   Size string
@@ -29,8 +36,7 @@ type DocIdentifier struct {
 
 // A representation of the annotations associated with an item from the HCSvLab API
 type AnnotationList struct {
-  Item_id string
-  Item string
+  Annotates string
   Annotations_found float64
   Annotations []Annotation
 }
@@ -57,7 +63,22 @@ type Api struct {
   Key string
 }
 
+// Returns the API version provided on the server
+func (api *Api) GetVersion() (ver ApiVersion, err error) {
+  url := fmt.Sprintf("%s/version.json",api.Base)
+  data, err := api.Get(url)
+  if err != nil {
+    return
+  }
 
+  log.Println("Json:",string(data))
+  err = json.Unmarshal([]byte(data),&ver)
+  log.Println("Unmarshalled:",ver);
+  return
+}
+
+// Helper function that gets the raw data from the URL specified,
+// by providing the API key appropriately.
 func (api *Api) Get(url string) (data []byte, err error) {
   client := &http.Client{}
   req, err := http.NewRequest("GET", url, nil)
@@ -79,6 +100,8 @@ func (api *Api) Get(url string) (data []byte, err error) {
   return
 }
 
+// Function to return an ItemList corresponding to the numbered itemlist
+// given
 func (api *Api) GetItemList(list int) (il ItemList, err error)  {
   url := fmt.Sprintf("%s/item_lists/%d.json",api.Base, list)
   data, err := api.Get(url);
@@ -89,6 +112,8 @@ func (api *Api) GetItemList(list int) (il ItemList, err error)  {
   return
 }
 
+
+// Function to return the annotations associated with a particular item
 func (api *Api) GetAnnotations(item Item) (al AnnotationList, err error)  {
   data, err := api.Get(item.Annotations_url)
   if err != nil {
@@ -98,7 +123,9 @@ func (api *Api) GetAnnotations(item Item) (al AnnotationList, err error)  {
   return
 }
 
-func (api *Api) GetItem(url string)  (item Item, err error) {
+
+// Function to get a particular item from 
+func (api *Api) GetItemFromUri(url string)  (item Item, err error) {
   data, err := api.Get(url)
   if err != nil {
     return

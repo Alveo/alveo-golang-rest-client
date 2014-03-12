@@ -45,8 +45,8 @@ type AnnotationList struct {
 type Annotation struct {
   Type string
   Label string
-  Start float64
-  End float64
+  Start string
+  End string
 }
 
 // An item that contains metadata about a document from the HCSvLab API
@@ -71,9 +71,7 @@ func (api *Api) GetVersion() (ver ApiVersion, err error) {
     return
   }
 
-  log.Println("Json:",string(data))
-  err = json.Unmarshal([]byte(data),&ver)
-  log.Println("Unmarshalled:",ver);
+  err = json.Unmarshal(data,&ver)
   return
 }
 

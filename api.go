@@ -15,6 +15,8 @@ import (
 )
 
 
+var logger *log.Logger
+
 
 // A representation of an item list from the HCSvLab API
 type ItemList struct {
@@ -78,13 +80,20 @@ func (api *Api) GetVersion() (ver ApiVersion, err error) {
   return
 }
 
+// Sets the logger to be used when making requests. Useful for debugging
+func SetLogger(newlogger *log.Logger) {
+  logger = newlogger
+}
+
 // Helper function that gets the raw data from the URL specified,
 // by providing the API key appropriately.
 func (api *Api) Get(url string) (data []byte, err error) {
   client := &http.Client{}
   req, err := http.NewRequest("GET", url, nil)
   req.Header.Add("X-API-KEY",api.Key)
-  log.Println("Requesting ",url,"with Key",api.Key)
+  if logger != nil {
+    logger.Println("Requesting ",url,"with Key",api.Key)
+  }
   start := time.Now()
   resp, err := client.Do(req)
   if err != nil {
@@ -96,7 +105,9 @@ func (api *Api) Get(url string) (data []byte, err error) {
   }
   data, err = ioutil.ReadAll(resp.Body)
   end := time.Now()
-  log.Println("Time",url,end.Sub(start).Seconds(),resp.ContentLength)
+  if logger != nil {
+    logger.Println("Time",url,end.Sub(start).Seconds(),resp.ContentLength)
+  }
   resp.Body.Close()
   return
 }

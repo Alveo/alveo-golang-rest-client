@@ -36,26 +36,29 @@ type DocIdentifier struct {
 
 // A representation of the annotations associated with an item from the HCSvLab API
 type AnnotationList struct {
-  Annotates string
-  Annotations_found float64
-  Annotations []Annotation
+  CommonProperties AnnotationProperties `json:"commonProperties"`
+  Annotations []Annotation `json:"hcsvlab:annotations"`
+}
+
+type AnnotationProperties struct {
+  Annotates string `json:"hcsvlab:annotates"`
 }
 
 // An annotation associated with a documents. AnnotationLists have more than one of these.
 type Annotation struct {
-  Type string
-  Label string
-  Start string
-  End string
+  Type string `json:"type"`
+  Label string `json:"label"`
+  Start string `json:"start"`
+  End string `json:"end"`
 }
 
 // An item that contains metadata about a document from the HCSvLab API
 type Item struct {
- Catalog_url string
- Metadata map[string]string
- Primary_text_url string
- Annotations_url string
- Documents []DocIdentifier
+ Catalog_url string `json:"hcsvlab:catalog_url"`
+ Metadata map[string]string `json:"hcsvlab:metadata"`
+ Primary_text_url string `json:"hcsvlab:primary_text_url"`
+ Annotations_url string `json:"hcsvlab:annotations_url"`
+ Documents []DocIdentifier `json:"hcsvlab:documents"`
 }
 
 type Api struct {

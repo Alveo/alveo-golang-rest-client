@@ -5,10 +5,8 @@ package alveoapi
 import (
   "fmt"
   "net/http"
-  "net/url"
   "encoding/json"
   "log"
-  "crypto/tls"
   "errors"
   "strconv"
   "io/ioutil"
@@ -90,17 +88,7 @@ func SetLogger(newlogger *log.Logger) {
 // Helper function that gets the raw data from the URL specified,
 // by providing the API key appropriately.
 func (api *Api) Get(reqUrl string) (data []byte, err error) {
-  // Todo - the following MUST BE REMOVED
-  pr, err := url.Parse("http://bproxy.its.rmit.edu.au:8080")
-  if err != nil {
-    panic(err)
-  }
-  tr := &http.Transport{
-    TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-    Proxy: http.ProxyURL(pr),
-  }
-  // todo - the above MUST BE REMOVED
-  client := &http.Client{Transport: tr}
+  client := &http.Client{}
   req, err := http.NewRequest("GET", reqUrl, nil)
   req.Header.Add("X-API-KEY",api.Key)
   if logger != nil {

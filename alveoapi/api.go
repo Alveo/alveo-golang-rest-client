@@ -1,13 +1,14 @@
-
 // Package hcsvlabapi provides an convienience implementation of the client side of the
 // HCS-Vlab API, which can be seen at http://wherever-the-api-is.com
-package hcsvlabapi
+package alveoapi
 
 import (
   "fmt"
   "net/http"
+  "net/url"
   "encoding/json"
   "log"
+  "crypto/tls"
   "errors"
   "strconv"
   "io/ioutil"
@@ -25,6 +26,7 @@ type ItemList struct {
   Items []string
 }
 
+// 
 type ApiVersion struct {
  Api_version string `json:"API version"`
 }
@@ -39,11 +41,11 @@ type DocIdentifier struct {
 // A representation of the annotations associated with an item from the HCSvLab API
 type AnnotationList struct {
   CommonProperties AnnotationProperties `json:"commonProperties"`
-  Annotations []Annotation `json:"hcsvlab:annotations"`
+  Annotations []Annotation `json:"alveo:annotations"`
 }
 
 type AnnotationProperties struct {
-  Annotates string `json:"hcsvlab:annotates"`
+  Annotates string `json:"alveo:annotates"`
 }
 
 // An annotation associated with a documents. AnnotationLists have more than one of these.
@@ -56,11 +58,11 @@ type Annotation struct {
 
 // An item that contains metadata about a document from the HCSvLab API
 type Item struct {
- Catalog_url string `json:"hcsvlab:catalog_url"`
- Metadata map[string]string `json:"hcsvlab:metadata"`
- Primary_text_url string `json:"hcsvlab:primary_text_url"`
- Annotations_url string `json:"hcsvlab:annotations_url"`
- Documents []DocIdentifier `json:"hcsvlab:documents"`
+ Catalog_url string `json:"alveo:catalog_url"`
+ Metadata map[string]string `json:"alveo:metadata"`
+ Primary_text_url string `json:"alveo:primary_text_url"`
+ Annotations_url string `json:"alveo:annotations_url"`
+ Documents []DocIdentifier `json:"alveo:documents"`
 }
 
 type Api struct {
@@ -87,12 +89,22 @@ func SetLogger(newlogger *log.Logger) {
 
 // Helper function that gets the raw data from the URL specified,
 // by providing the API key appropriately.
-func (api *Api) Get(url string) (data []byte, err error) {
-  client := &http.Client{}
-  req, err := http.NewRequest("GET", url, nil)
+func (api *Api) Get(reqUrl string) (data []byte, err error) {
+  // Todo - the following MUST BE REMOVED
+  pr, err := url.Parse("http://bproxy.its.rmit.edu.au:8080")
+  if err != nil {
+    panic(err)
+  }
+  tr := &http.Transport{
+    TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+    Proxy: http.ProxyURL(pr),
+  }
+  // todo - the above MUST BE REMOVED
+  client := &http.Client{Transport: tr}
+  req, err := http.NewRequest("GET", reqUrl, nil)
   req.Header.Add("X-API-KEY",api.Key)
   if logger != nil {
-    logger.Println("Requesting ",url,"with Key",api.Key)
+    logger.Println("Requesting ",reqUrl,"with Key",api.Key)
   }
   start := time.Now()
   resp, err := client.Do(req)
@@ -100,13 +112,13 @@ func (api *Api) Get(url string) (data []byte, err error) {
     return
   }
   if resp.StatusCode != 200 {
-    err = errors.New("Status " + strconv.Itoa(resp.StatusCode) + " from " + url)
+    err = errors.New("Status " + strconv.Itoa(resp.StatusCode) + " from " + reqUrl)
     return
   }
   data, err = ioutil.ReadAll(resp.Body)
   end := time.Now()
   if logger != nil {
-    logger.Println("Time",url,end.Sub(start).Seconds(),resp.ContentLength)
+    logger.Println("Time",reqUrl,end.Sub(start).Seconds(),resp.ContentLength)
   }
   resp.Body.Close()
   return
@@ -136,7 +148,7 @@ func (api *Api) GetAnnotations(item Item) (al AnnotationList, err error)  {
 }
 
 
-// Function to get a particular item from 
+// Function to get a particular item from the item's url
 func (api *Api) GetItemFromUri(url string)  (item Item, err error) {
   data, err := api.Get(url)
   if err != nil {

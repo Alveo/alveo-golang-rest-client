@@ -1,0 +1,380 @@
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/TimothyJones/alveo-api-golang/alveoapi"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package hcsvlabapi provides an convienience implementation of the client side of the
+HCS-Vlab API, which can be seen at <a href="http://wherever-the-api-is.com">http://wherever-the-api-is.com</a>
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="#SetLogger">func SetLogger(newlogger *log.Logger)</a></dd>
+			
+			
+				
+				<dd><a href="#Annotation">type Annotation</a></dd>
+				
+				
+			
+				
+				<dd><a href="#AnnotationList">type AnnotationList</a></dd>
+				
+				
+			
+				
+				<dd><a href="#AnnotationProperties">type AnnotationProperties</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Api">type Api</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Api.Get">func (api *Api) Get(reqUrl string) (data []byte, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Api.GetAnnotations">func (api *Api) GetAnnotations(item Item) (al AnnotationList, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Api.GetItemFromUri">func (api *Api) GetItemFromUri(url string) (item Item, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Api.GetItemList">func (api *Api) GetItemList(list int) (il ItemList, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Api.GetVersion">func (api *Api) GetVersion() (ver ApiVersion, err error)</a></dd>
+				
+			
+				
+				<dd><a href="#ApiVersion">type ApiVersion</a></dd>
+				
+				
+			
+				
+				<dd><a href="#DocIdentifier">type DocIdentifier</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Item">type Item</a></dd>
+				
+				
+			
+				
+				<dd><a href="#ItemList">type ItemList</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/target/api.go">api.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		
+		
+		
+			
+			
+			<h2 id="SetLogger">func <a href="/target/api.go?s=1977:2014#L76">SetLogger</a></h2>
+			<pre>func SetLogger(newlogger *<a href="/pkg/log/">log</a>.<a href="/pkg/log/#Logger">Logger</a>)</pre>
+			<p>
+Sets the logger to be used when making requests. Useful for debugging
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Annotation">type <a href="/target/api.go?s=1091:1231#L42">Annotation</a></h2>
+			<pre>type Annotation struct {
+    Type  <a href="/pkg/builtin/#string">string</a> `json:&#34;type&#34;`
+    Label <a href="/pkg/builtin/#string">string</a> `json:&#34;label&#34;`
+    Start <a href="/pkg/builtin/#string">string</a> `json:&#34;start&#34;`
+    End   <a href="/pkg/builtin/#string">string</a> `json:&#34;end&#34;`
+}</pre>
+			<p>
+An annotation associated with a documents. AnnotationLists have more than one of these.
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="AnnotationList">type <a href="/target/api.go?s=766:916#L32">AnnotationList</a></h2>
+			<pre>type AnnotationList struct {
+    CommonProperties <a href="#AnnotationProperties">AnnotationProperties</a> `json:&#34;commonProperties&#34;`
+    Annotations      []<a href="#Annotation">Annotation</a>         `json:&#34;alveo:annotations&#34;`
+}</pre>
+			<p>
+A representation of the annotations associated with an item from the HCSvLab API
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="AnnotationProperties">type <a href="/target/api.go?s=918:998#L37">AnnotationProperties</a></h2>
+			<pre>type AnnotationProperties struct {
+    Annotates <a href="/pkg/builtin/#string">string</a> `json:&#34;alveo:annotates&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Api">type <a href="/target/api.go?s=1590:1636#L58">Api</a></h2>
+			<pre>type Api struct {
+    Base <a href="/pkg/builtin/#string">string</a>
+    Key  <a href="/pkg/builtin/#string">string</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+				
+				<h3 id="Api.Get">func (*Api) <a href="/target/api.go?s=2150:2209#L82">Get</a></h3>
+				<pre>func (api *<a href="#Api">Api</a>) Get(reqUrl <a href="/pkg/builtin/#string">string</a>) (data []<a href="/pkg/builtin/#byte">byte</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Helper function that gets the raw data from the URL specified,
+by providing the API key appropriately.
+</p>
+
+				
+				
+			
+				
+				<h3 id="Api.GetAnnotations">func (*Api) <a href="/target/api.go?s=3520:3592#L131">GetAnnotations</a></h3>
+				<pre>func (api *<a href="#Api">Api</a>) GetAnnotations(item <a href="#Item">Item</a>) (al <a href="#AnnotationList">AnnotationList</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Function to return the annotations associated with a particular item
+</p>
+
+				
+				
+			
+				
+				<h3 id="Api.GetItemFromUri">func (*Api) <a href="/target/api.go?s=3777:3843#L142">GetItemFromUri</a></h3>
+				<pre>func (api *<a href="#Api">Api</a>) GetItemFromUri(url <a href="/pkg/builtin/#string">string</a>) (item <a href="#Item">Item</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Function to get a particular item from the item&#39;s url
+</p>
+
+				
+				
+			
+				
+				<h3 id="Api.GetItemList">func (*Api) <a href="/target/api.go?s=3213:3275#L119">GetItemList</a></h3>
+				<pre>func (api *<a href="#Api">Api</a>) GetItemList(list <a href="/pkg/builtin/#int">int</a>) (il <a href="#ItemList">ItemList</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Function to return an ItemList corresponding to the numbered itemlist
+given
+</p>
+
+				
+				
+			
+				
+				<h3 id="Api.GetVersion">func (*Api) <a href="/target/api.go?s=1688:1744#L64">GetVersion</a></h3>
+				<pre>func (api *<a href="#Api">Api</a>) GetVersion() (ver <a href="#ApiVersion">ApiVersion</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Returns the API version provided on the server
+</p>
+
+				
+				
+			
+		
+			
+			
+			<h2 id="ApiVersion">type <a href="/target/api.go?s=471:538#L20">ApiVersion</a></h2>
+			<pre>type ApiVersion struct {
+    Api_version <a href="/pkg/builtin/#string">string</a> `json:&#34;API version&#34;`
+}</pre>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DocIdentifier">type <a href="/target/api.go?s=610:680#L25">DocIdentifier</a></h2>
+			<pre>type DocIdentifier struct {
+    Size <a href="/pkg/builtin/#string">string</a>
+    Url  <a href="/pkg/builtin/#string">string</a>
+    Type <a href="/pkg/builtin/#string">string</a>
+}</pre>
+			<p>
+A representation of a document within an item from the HCSvLab API
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Item">type <a href="/target/api.go?s=1305:1588#L50">Item</a></h2>
+			<pre>type Item struct {
+    Catalog_url      <a href="/pkg/builtin/#string">string</a>            `json:&#34;alveo:catalog_url&#34;`
+    Metadata         map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#string">string</a> `json:&#34;alveo:metadata&#34;`
+    Primary_text_url <a href="/pkg/builtin/#string">string</a>            `json:&#34;alveo:primary_text_url&#34;`
+    Annotations_url  <a href="/pkg/builtin/#string">string</a>            `json:&#34;alveo:annotations_url&#34;`
+    Documents        []<a href="#DocIdentifier">DocIdentifier</a>   `json:&#34;alveo:documents&#34;`
+}</pre>
+			<p>
+An item that contains metadata about a document from the HCSvLab API
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ItemList">type <a href="/target/api.go?s=390:465#L13">ItemList</a></h2>
+			<pre>type ItemList struct {
+    Name      <a href="/pkg/builtin/#string">string</a>
+    Num_items <a href="/pkg/builtin/#float64">float64</a>
+    Items     []<a href="/pkg/builtin/#string">string</a>
+}</pre>
+			<p>
+A representation of an item list from the HCSvLab API
+</p>
+
+
+			
+
+			
+
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+

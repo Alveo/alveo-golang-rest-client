@@ -24,7 +24,7 @@ type ItemList struct {
   Items []string
 }
 
-// 
+// The response from API version
 type ApiVersion struct {
  Api_version string `json:"API version"`
 }
@@ -34,6 +34,20 @@ type DocIdentifier struct {
   Size string
   Url string
   Type string
+}
+
+// A representation of all the itemlists a user has access to:
+type ItemLists struct {
+  Own []ItemListIdentifier `json:"own"`
+  Shared []ItemListIdentifier `json:"shared"`
+}
+
+// A representation of an itemlist from the /item_lists response
+type ItemListIdentifier struct {
+  Name string `json:"name"`
+  ItemListUrl string `json:"item_list_url"`
+  NumItems int64 `json:"num_items"`
+  Shared bool `json:"shared"`
 }
 
 // A representation of the annotations associated with an item from the HCSvLab API
@@ -124,6 +138,16 @@ func (api *Api) GetItemList(list int) (il ItemList, err error)  {
   return
 }
 
+// Function to enumerate the ItemLists a user has access to
+func (api *Api) GetItemLists() (il ItemLists, err error)  {
+  url := fmt.Sprintf("%s/item_lists.json",api.Base)
+  data, err := api.Get(url);
+  if err != nil {
+    return
+  }
+  err = json.Unmarshal(data,&il)
+  return
+}
 
 // Function to return the annotations associated with a particular item
 func (api *Api) GetAnnotations(item Item) (al AnnotationList, err error)  {
